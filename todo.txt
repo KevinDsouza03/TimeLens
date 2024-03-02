@@ -1,0 +1,34 @@
+Time Manager App:
+
+Purpose: 
+    - Block applications and sites that are distracting when wanting to do work.
+    - Sessions for work w. blocking.
+    - Track time spent "consuming".
+    - Application, not web-app for tracking.
+
+
+How to:
+Block Applications:
+    - 
+
+Block Websites:
+    - 
+
+Get Data/Track Time: 1
+    - Pywin32 Libary 
+    - Get Focused Window DONE
+    - Run on an Interval DONE
+    - Store what was focused. // Ideas: csv file for easy exporting. Then can be interpreted elsewhere. DONE
+
+Focus Session:
+    - Check pyvda python
+
+
+Interpretating Data:
+    - Current: Use program to get data about your usage, then can be interpreted with a web app?
+    - Datetime subtraction until focused changes, so we can total time spent on applications.
+
+
+
+Tools/Format:
+    - Windows: Open a new desktop for the work session, so when "unlocked", just open old desktop.
