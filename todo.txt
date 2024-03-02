@@ -21,11 +21,11 @@ Get Data/Track Time: 1
     - Store what was focused. // Ideas: csv file for easy exporting. Then can be interpreted elsewhere. DONE
 
 Focus Session:
-    - Check pyvda python
+    - Check pyvda python, time-tracker-cli ?
 
 
 Interpretating Data:
-    - Current: Use program to get data about your usage, then can be interpreted with a web app?
+    - Current: Use program to get data about your usage, then can be interpreted with a web app? Streamlit?
     - Datetime subtraction until focused changes, so we can total time spent on applications.
 
 
