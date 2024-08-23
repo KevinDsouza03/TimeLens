@@ -18,7 +18,7 @@ def main():
             while True:
                 try:
                     storeFocus.storeFocus()
-                    sleep(5) # Wait 5 seconds before next iteration.
+                    sleep(1) # Wait 5 seconds before next iteration.
                 except KeyboardInterrupt:
                     print("Exiting...")
                     break

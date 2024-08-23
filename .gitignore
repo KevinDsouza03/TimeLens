@@ -1,0 +1,29 @@
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# IDE settings
+.vscode/
+
+# Temporary or log files
+*.log
+*.tmp
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Project-specific ignores
+results/
+data.pynb
+focus.csv
+todo.json
+
+# Keep the README files
+!README.md
+!BLANK_README.md
