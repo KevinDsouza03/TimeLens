@@ -1,5 +1,5 @@
 Time Manager App:
-
+.\env\Scripts\activate
 Purpose: 
     - Block applications and sites that are distracting when wanting to do work.
     - Sessions for work w. blocking.

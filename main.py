@@ -3,6 +3,7 @@ from time import sleep
 from pprint import pprint
 import editTodo
 import inquirer
+#.\env\Scripts\activate
 
 def main():
     print("Welcome to Time Manager." + "\n" + "Press Ctrl+C to exit.")
