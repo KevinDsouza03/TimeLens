@@ -3,6 +3,7 @@ from time import sleep
 from pprint import pprint
 import editTodo
 import inquirer
+import startVisualize
 #.\env\Scripts\activate
 
 def main():
@@ -28,6 +29,9 @@ def main():
         elif selection_choice["Activity"] == "Add Todo":
             print("Adding Todo...")
             editTodo.addTodo(input("What would you like to add to your todo list? "))
+        elif selection_choice["Activity"] == "Visualize":
+            print("Starting Visualization Session...")
+            startVisualize.start()
         selection_choice = inquirer.prompt(questions)
 
 
