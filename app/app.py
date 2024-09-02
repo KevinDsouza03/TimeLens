@@ -5,9 +5,11 @@ import pandas as pd
 def main():
     df = pd.read_csv('./results/focus.csv')
     st.title("What are my habits")
-    st.table(df)
+    st.bar_chart(df)
+
+    
 
 
 
 
-main()
+main() 
