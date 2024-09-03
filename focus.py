@@ -41,10 +41,21 @@ def processFocus():
     Think about what you want to see from our current data collection.
 
     *Each Seperation here will be a different file, as constantly re-calculating this is too inefficient
+    Goes from specific to broader outlooks
+
     1. Total time on Program
     2. Most used program in general *Can be accomplished by sorting via Total Time
-
+    3. Context Switching, How often are we task switching
+        - Average time spent focused on a task.
+        - How often are we switching, hourly.
+    4. What time of the day are we the most productive? Morning, Afternoon, e.t.c
+    
+    
     1. Day specific time calculating (Grouping via Date)
+    
+    1. Monthly Insights
+
+    1. Time distribution by Category: Classify specific apps (Work, Personal, Entertainment) and display how its broken down
 
 
     """
