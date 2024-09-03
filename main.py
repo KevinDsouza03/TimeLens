@@ -1,4 +1,4 @@
-import storeFocus
+from focus import storeFocus
 from time import sleep
 from pprint import pprint
 import editTodo
@@ -19,10 +19,11 @@ def main():
             print("Tracking Usage...")
             while True:
                 try:
-                    storeFocus.storeFocus()
+                    storeFocus()
                     sleep(1) # Wait 5 seconds before next iteration.
                 except KeyboardInterrupt:
-                    print("Exiting...")
+                    print("Tracking stopped. Processing data")
+                    #Put in estimated time? Figure that out
                     break
         elif selection_choice["Activity"] == "Work Session":
             print("Starting Work Session...")
