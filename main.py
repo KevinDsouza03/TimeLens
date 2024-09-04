@@ -1,6 +1,5 @@
 from focus import storeFocus
 from time import sleep
-from pprint import pprint
 import editTodo
 import inquirer
 import startVisualize
