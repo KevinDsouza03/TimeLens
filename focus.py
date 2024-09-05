@@ -4,23 +4,38 @@ from win32gui import GetWindowText, GetForegroundWindow
 from datetime import datetime
 import win32process  # For PID
 import psutil  # Gives PID info
+import sqlite3
 
-path_to_folder = "results"
-csv_file = path_to_folder + "/focus.csv"
+db_file = 'results/focus.db'
+
+#First, we check if table exists, reference createTable()
+#Next, we get our data and establish connection to the db. After that, we query to check the last program and check for change
+#If not, input into db, otherwise return nothing
 def storeFocus():
     # Get the current focused window
-    file_exists = os.path.isfile(csv_file)
+    createTable()
     data = getFocused() #HWND object
-    if file_exists:
-        prev = pd.read_csv(csv_file)['Focused'].iloc[-1]
-        print(prev)
-        if prev == data['Focused']:
-            return
-    # Create a dict to store the focused window and the time
-    # Create a dataframe from the dict
-    df = pd.DataFrame([data])
-    # Create a CSV file to store the dataframe. Append to EOF if it exists, else write headers.
-    df.to_csv(csv_file, index=False, mode="a", header=not file_exists)
+    connection = sqlite3.connect(db_file)
+    cursor = connection.cursor()
+
+    cursor.execute('''
+        SELECT focused FROM focus_logs ORDER BY id DESC LIMIT 1               
+    ''') #SELECTED focused column from the last input.
+    last_focused = cursor.fetchone()
+
+    if last_focused and last_focused[0] == data['Focused']:
+        connection.close()
+        return
+    
+    cursor.execute('''
+        INSERT INTO focus_logs (date, time, focused, program)
+        VALUES (?, ?, ?, ?)
+    ''', (data['Date'], data['Time'], data['Focused'], data['Program']))
+    connection.commit()
+    connection.close()
+    #Ensure we close connections
+
+    
 
 # Gets the focused window's title.
 # Returns a dictionary with date-time, focused window title, and program name.
@@ -35,6 +50,24 @@ def getFocused():
         "Program": psutil.Process(pid).name(),
     }
     return data
+
+#If table doesnt exist, it gets created
+def createTable():
+    connection = sqlite3.connect(db_file) #A connection to the database
+    cursor = connection.cursor() #Allows us to execute SQL
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS focus_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TEXT,
+            time TEXT,
+            focused TEXT,
+            program TEXT
+        )
+    ''')
+
+    connection.commit()
+    connection.close()
 
 def processFocus():
     """
