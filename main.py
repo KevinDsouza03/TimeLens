@@ -22,6 +22,7 @@ def main():
                     sleep(1) # Wait 5 seconds before next iteration.
                 except KeyboardInterrupt:
                     print("Tracking stopped. Processing data")
+                    
                     #Put in estimated time? Figure that out
                     break
         elif selection_choice["Activity"] == "Work Session":

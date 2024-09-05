@@ -20,10 +20,9 @@ venv/
 Thumbs.db
 
 # Project-specific ignores
-results/
-data.pynb
-focus.csv
-todo.json
+
+results/focus.csv
+results/todo.csv
 
 # Keep the README files
 !README.md
