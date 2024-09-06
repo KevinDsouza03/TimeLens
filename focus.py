@@ -89,7 +89,7 @@ def createTable():
 
 # This function processes every stat thats in the program scope.
 def programStats():
-    connection = sqlite3.connect("focus.db")
+    connection = sqlite3.connect(db_file)
     df = pd.read_sql("SELECT * FROM focus_logs",connection)
     #The first thing is to add a tracking ended entry. So...
     # Now by entry, I want to get a total time/add up datetimes. Join "Date" and "Time" then just sum up?
@@ -116,12 +116,15 @@ def programStats():
 
         # Insert or update the row for the program
         cursor.execute('''
-            INSERT INTO insights (program, total_time)
+            INSERT INTO program_insights (program, total_time)
             VALUES (?, ?)
             ON CONFLICT(program) DO UPDATE SET 
             total_time = excluded.total_time,
             last_updated = CURRENT_TIMESTAMP
         ''', (program, str(total_time)))
+    
+    connection.commit()
+    connection.close()
 
 def dayStats():
     #Todo
@@ -164,5 +167,6 @@ def processFocus():
 
 
     """
+    createTable()
     programStats()
     return
