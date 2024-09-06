@@ -22,7 +22,7 @@ def storeFocus():
         SELECT focused FROM focus_logs ORDER BY id DESC LIMIT 1               
     ''') #SELECTED focused column from the last input.
     last_focused = cursor.fetchone()
-
+    print(data['Focused'])
     if last_focused and last_focused[0] == data['Focused']:
         connection.close()
         return

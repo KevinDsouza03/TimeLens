@@ -23,6 +23,7 @@ Thumbs.db
 
 results/focus.csv
 results/todo.csv
+results/focus.db
 
 # Keep the README files
 !README.md
