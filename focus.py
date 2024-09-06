@@ -66,29 +66,103 @@ def createTable():
         )
     ''')
 
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS program_insights (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            program TEXT UNIQUE,  -- Ensure the program column is unique
+            total_time TEXT, 
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS general_insights (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            total_context_switches INTEGER DEFAULT 0,
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+    ''')
+
     connection.commit()
     connection.close()
 
+
+# This function processes every stat thats in the program scope.
+def programStats():
+    connection = sqlite3.connect("focus.db")
+    df = pd.read_sql("SELECT * FROM focus_logs",connection)
+    #The first thing is to add a tracking ended entry. So...
+    # Now by entry, I want to get a total time/add up datetimes. Join "Date" and "Time" then just sum up?
+    df['datetime'] = pd.to_datetime(df['date'] + ' ' + df['time'])
+    df = df.sort_values(by=['datetime'])
+
+    # Current datetime - next datetime
+    df['timespent'] = df['datetime'].shift(-1) - df['datetime']
+    # For the last row, set a default time (e.g., 5 seconds), as there's no next row
+    df.iloc[-1, df.columns.get_loc('timespent')] = pd.Timedelta(seconds=5)
+
+    total_time_per_program = df.groupby('program')['timespent'].sum()
+
+
+    #Task: Storing insights FOR EACH PROGRAM into the database
+    insights_data = {
+        'total_time': total_time_per_program
+        #Add more data here as needed
+    }
+    cursor = connection.cursor()
+
+    # Insert or update insights for each program
+    for program, total_time in total_time_per_program.items():
+
+        # Insert or update the row for the program
+        cursor.execute('''
+            INSERT INTO insights (program, total_time)
+            VALUES (?, ?)
+            ON CONFLICT(program) DO UPDATE SET 
+            total_time = excluded.total_time,
+            last_updated = CURRENT_TIMESTAMP
+        ''', (program, str(total_time)))
+
+def dayStats():
+    #Todo
+    return
+
+def monthStats():
+    #Todo
+    return
+
+def overallStats():
+    #Todo
+    return
+
+
+#Main function to call all others
 def processFocus():
     """
     Think about what you want to see from our current data collection.
 
-    *Each Seperation here will be a different file, as constantly re-calculating this is too inefficient
+    *Each Seperation here will be a different table in db, as constantly re-calculating this is too inefficient
     Goes from specific to broader outlooks
 
-    1. Total time on Program
-    2. Most used program in general *Can be accomplished by sorting via Total Time
-    3. Context Switching, How often are we task switching
-        - Average time spent focused on a task.
-        - How often are we switching, hourly.
-    4. What time of the day are we the most productive? Morning, Afternoon, e.t.c
+    Per Program
+    1. Total time on Program DONE
+    2. Most used program in general *Can be accomplished by sorting via Total Time DONE
     
-    
+    Per Day
     1. Day specific time calculating (Grouping via Date)
     
+    Per Month
     1. Monthly Insights
 
+    Overarching insights
     1. Time distribution by Category: Classify specific apps (Work, Personal, Entertainment) and display how its broken down
+    2. Context Switching, How often are we task switching
+    - Average time spent focused on a task.
+    - How often are we switching, hourly.
+    3. What time of the day are we the most productive? Morning, Afternoon, e.t.c
+    
 
 
     """
+    programStats()
+    return
