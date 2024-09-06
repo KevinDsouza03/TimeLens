@@ -1,5 +1,9 @@
 # TimeLens
 
+What is TimeLens:
+  TimeLens aims to be a productivity/activity tracker for your Windows PC. I aim to provide insights and meaningful metrics using the WindowsAPI, such as total time on programs, and how often you switch tasks. A more specific breakdown of the inspiration is provided below, but overall I started this app to try and find out my own computer habits. While there are other tools, I wanted to delve into the WindowsAPI for a long time and finally got to doing it.
+
+
 Problem: 
 - While there are many activity/time trackers and logs, the main concern is where this data is going.
 Solution:
