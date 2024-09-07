@@ -62,7 +62,8 @@ def createTable():
             date TEXT,
             time TEXT,
             focused TEXT,
-            program TEXT
+            program TEXT,
+            session_end BOOLEAN DEFAULT 0
         )
     ''')
 
@@ -89,7 +90,7 @@ def createTable():
 
 # This function processes every stat thats in the program scope.
 def programStats():
-    connection = sqlite3.connect(db_file)
+    connection = sqlite3.connect(db_file)   
     df = pd.read_sql("SELECT * FROM focus_logs",connection)
     #The first thing is to add a tracking ended entry. So...
     # Now by entry, I want to get a total time/add up datetimes. Join "Date" and "Time" then just sum up?
@@ -138,7 +139,6 @@ def overallStats():
     #Todo
     return
 
-
 #Main function to call all others
 def processFocus():
     """
@@ -165,8 +165,17 @@ def processFocus():
     3. What time of the day are we the most productive? Morning, Afternoon, e.t.c
     
 
-
     """
-    createTable()
+    connection = sqlite3.connect(db_file) 
+    cursor = connection.cursor() 
+    time = datetime.now() 
+    # Insert a session end marker
+    cursor.execute('''
+        INSERT INTO focus_logs (date, time, focused, program, session_end)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (time.strftime("%m/%d/%Y"), time.strftime("%H:%M:%S"), 'Session End', 'None', True))
+
+    connection.commit()
+    connection.close()
     programStats()
     return
