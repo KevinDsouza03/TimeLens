@@ -151,6 +151,9 @@ def processFocus():
     1. Total time on Program DONE
     2. Most used program in general *Can be accomplished by sorting via Total Time DONE
     
+    Per Session: Between Session End entries
+    1. 
+
     Per Day
     1. Day specific time calculating (Grouping via Date)
     
