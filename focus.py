@@ -150,6 +150,7 @@ def processFocus():
     Per Program
     1. Total time on Program DONE
     2. Most used program in general *Can be accomplished by sorting via Total Time DONE
+    3. Average time spent focused on a program.
     
     Per Session: Between Session End entries
     1. 
@@ -162,12 +163,20 @@ def processFocus():
 
     Overarching insights
     1. Time distribution by Category: Classify specific apps (Work, Personal, Entertainment) and display how its broken down
+        - Categorize common applications. Make the user do it currently? Selecting an "intention" per focus session, and it categorizes it then. 
+
     2. Context Switching, How often are we task switching
-    - Average time spent focused on a task.
-    - How often are we switching, hourly.
+        - Track time when "program" changes, and we can mark that down in the db. Then afterwards, can group by program and that gives us a 
+            "how long we stay focused on program"
+                - Can repurpose the normal calculation for time. Instead of "sum" it can be mean? Line 105
+                - Also have a col w a counter for each time we switch.
+
     3. What time of the day are we the most productive? Morning, Afternoon, e.t.c
     
 
+    potential changes:
+    - Making a 'datetime' column in each program might be repetitive. Could maybe just make that the entire column? Or is it not that much
+        repeated work?
     """
     connection = sqlite3.connect(db_file) 
     cursor = connection.cursor() 
