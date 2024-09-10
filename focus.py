@@ -72,6 +72,7 @@ def createTable():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             program TEXT UNIQUE,  -- Ensure the program column is unique
             total_time TEXT, 
+            average_time TEXT,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     ''')
@@ -103,26 +104,28 @@ def programStats():
     df.iloc[-1, df.columns.get_loc('timespent')] = pd.Timedelta(seconds=5)
 
     total_time_per_program = df.groupby('program')['timespent'].sum()
-
-
+    average_time_per_program = df.groupby('program')['timespent'].mean()
+    
     #Task: Storing insights FOR EACH PROGRAM into the database
-    insights_data = {
-        'total_time': total_time_per_program
-        #Add more data here as needed
-    }
+    # insights_data = {
+    #     'total_time': total_time_per_program,
+    #     'average_time': average_time_per_program
+    #     #Add more data here as needed
+    # }
     cursor = connection.cursor()
 
     # Insert or update insights for each program
     for program, total_time in total_time_per_program.items():
-
+        average_time = average_time_per_program[program]
         # Insert or update the row for the program
         cursor.execute('''
-            INSERT INTO program_insights (program, total_time)
-            VALUES (?, ?)
+            INSERT INTO program_insights (program, total_time, average_time)
+            VALUES (?, ?, ?)
             ON CONFLICT(program) DO UPDATE SET 
             total_time = excluded.total_time,
+            average_time = excluded.average_time,
             last_updated = CURRENT_TIMESTAMP
-        ''', (program, str(total_time)))
+        ''', (program, str(total_time), str(average_time)))
     
     connection.commit()
     connection.close()
@@ -174,6 +177,7 @@ def processFocus():
     3. What time of the day are we the most productive? Morning, Afternoon, e.t.c
     
 
+    
     potential changes:
     - Making a 'datetime' column in each program might be repetitive. Could maybe just make that the entire column? Or is it not that much
         repeated work?
