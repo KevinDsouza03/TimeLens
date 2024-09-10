@@ -73,6 +73,7 @@ def createTable():
             program TEXT UNIQUE,  -- Ensure the program column is unique
             total_time TEXT, 
             average_time TEXT,
+            context_switch INTEGER,
             last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     ''')
@@ -104,28 +105,71 @@ def programStats():
     df.iloc[-1, df.columns.get_loc('timespent')] = pd.Timedelta(seconds=5)
 
     total_time_per_program = df.groupby('program')['timespent'].sum()
-    average_time_per_program = df.groupby('program')['timespent'].mean()
-    
-    #Task: Storing insights FOR EACH PROGRAM into the database
-    # insights_data = {
-    #     'total_time': total_time_per_program,
-    #     'average_time': average_time_per_program
-    #     #Add more data here as needed
-    # }
     cursor = connection.cursor()
 
+    # Next code is to calcuate average_time. I did this by summing up until we context switch (change programs), then average those sums.
+    total_time_per_program = {}
+    program_switch_counts = {}
+
+    previous_program = None
+    program_start_time = None
+
+
+    for i, row in df.iterrows():
+        current_program = row['program']
+        
+        if previous_program is None:  # First program encountered
+            previous_program = current_program
+            program_start_time = row['datetime']
+            continue
+
+        # If the program changes or session ends, calculate time spent on the previous program
+        if current_program != previous_program or row.get('session_end', False):
+            # Calculate time spent on the previous program
+            time_spent = row['datetime'] - program_start_time
+
+            # Update total time and switch count for the previous program
+            if previous_program not in total_time_per_program:
+                total_time_per_program[previous_program] = time_spent
+                program_switch_counts[previous_program] = 1
+            else:
+                total_time_per_program[previous_program] += time_spent
+                program_switch_counts[previous_program] += 1
+
+            # Reset for the new program
+            previous_program = current_program
+            program_start_time = row['datetime']
+
+    # Handle the last program
+    if previous_program is not None:
+        time_spent = pd.Timedelta(seconds=5)  # You can customize this default value
+        if previous_program not in total_time_per_program:
+            total_time_per_program[previous_program] = time_spent
+            program_switch_counts[previous_program] = 1
+        else:
+            total_time_per_program[previous_program] += time_spent
+            program_switch_counts[previous_program] += 1
+
+    # Calculate average time per program
+    average_time_per_program = {
+        program: total_time / program_switch_counts[program] 
+        for program, total_time in total_time_per_program.items()
+    }
+    
     # Insert or update insights for each program
     for program, total_time in total_time_per_program.items():
         average_time = average_time_per_program[program]
+        context_switch = program_switch_counts[program]
         # Insert or update the row for the program
         cursor.execute('''
-            INSERT INTO program_insights (program, total_time, average_time)
-            VALUES (?, ?, ?)
+            INSERT INTO program_insights (program, total_time, average_time, context_switch)
+            VALUES (?, ?, ?, ?)
             ON CONFLICT(program) DO UPDATE SET 
             total_time = excluded.total_time,
             average_time = excluded.average_time,
+            context_switch = excluded.context_switch,
             last_updated = CURRENT_TIMESTAMP
-        ''', (program, str(total_time), str(average_time)))
+        ''', (program, str(total_time), str(average_time), context_switch))
     
     connection.commit()
     connection.close()
@@ -153,7 +197,7 @@ def processFocus():
     Per Program
     1. Total time on Program DONE
     2. Most used program in general *Can be accomplished by sorting via Total Time DONE
-    3. Average time spent focused on a program.
+    3. So, sum up until we reach a different program, then at the end of df we average that. Average_time, more of a total one. 
     
     Per Session: Between Session End entries
     1. 
@@ -171,7 +215,7 @@ def processFocus():
     2. Context Switching, How often are we task switching
         - Track time when "program" changes, and we can mark that down in the db. Then afterwards, can group by program and that gives us a 
             "how long we stay focused on program"
-                - Can repurpose the normal calculation for time. Instead of "sum" it can be mean? Line 105
+                - 
                 - Also have a col w a counter for each time we switch.
 
     3. What time of the day are we the most productive? Morning, Afternoon, e.t.c
