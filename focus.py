@@ -116,7 +116,6 @@ def programStats():
     # Next code is to calcuate average_time. I did this by summing up until we context switch (change programs), then average those sums.
     total_time_per_program = {}
     program_switch_counts = {}
-
     previous_program = None
     program_start_time = None
 
@@ -124,14 +123,14 @@ def programStats():
     for i, row in df.iterrows():
         current_program = row['program']
         
-        if previous_program is None:  # First program encountered
+        # First entry handling
+        if previous_program is None:  
             previous_program = current_program
             program_start_time = row['datetime']
             continue
 
-        # If the program changes or session ends, calculate time spent on the previous program
+        # When program changes, we sum from current datetime to start datetime. Giving us a total spent before context switching.
         if current_program != previous_program or row.get('session_end', False):
-            # Calculate time spent on the previous program
             time_spent = row['datetime'] - program_start_time
 
             # Update total time and switch count for the previous program
@@ -142,13 +141,13 @@ def programStats():
                 total_time_per_program[previous_program] += time_spent
                 program_switch_counts[previous_program] += 1
 
-            # Reset for the new program
+            #Store our program counts into the dictionary above, and the intial variables for later calculation.
             previous_program = current_program
             program_start_time = row['datetime']
 
-    # Handle the last program
+    #Last program handling
     if previous_program is not None:
-        time_spent = pd.Timedelta(seconds=5)  # You can customize this default value
+        time_spent = pd.Timedelta(seconds=5)
         if previous_program not in total_time_per_program:
             total_time_per_program[previous_program] = time_spent
             program_switch_counts[previous_program] = 1
@@ -156,17 +155,17 @@ def programStats():
             total_time_per_program[previous_program] += time_spent
             program_switch_counts[previous_program] += 1
 
-    # Calculate average time per program
+    #Average calc, total / context switches
     average_time_per_program = {
         program: total_time / program_switch_counts[program] 
         for program, total_time in total_time_per_program.items()
     }
     
-    # Insert or update insights for each program
+    #Database updating
     for program, total_time in total_time_per_program.items():
         average_time = average_time_per_program[program]
         context_switch = program_switch_counts[program]
-        # Insert or update the row for the program
+        #put new rows here and update query accordingly
         cursor.execute('''
             INSERT INTO program_insights (program, total_time, average_time, context_switch)
             VALUES (?, ?, ?, ?)
