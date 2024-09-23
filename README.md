@@ -32,8 +32,10 @@ Feasibility:
     - RAW DATA (Why do we want Raw data? This is unfiltered and the most basic so that if the user wants to do specific analysis, they can do so with the most barebones and interpret how they want to)
 
   Tech Stack:
-  - Python (data handling alongside streamlit for easy visualization)
+  - Python (Initial data formatting and gathering)
   - SQLite (db)
+  - React + ReCharts for Frontend Dashboard
+  - Go (Backend for querying db)
 
 
 Database Format: 3 Tables
