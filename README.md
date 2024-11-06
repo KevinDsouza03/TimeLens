@@ -36,6 +36,7 @@ Feasibility:
   - SQLite (db)
   - React + ReCharts for Frontend Dashboard
   - Go (Backend for querying db)
+  - Electron ?
 
 
 Database Format: 3 Tables
