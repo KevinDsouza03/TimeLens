@@ -35,7 +35,7 @@ Feasibility:
   - Python (Initial data formatting and gathering)
   - SQLite (db)
   - React + ReCharts for Frontend Dashboard
-  - Go (Backend for querying db)
+  - Java Spring (Backend)
   - Electron ?
 
 
