@@ -1,38 +1,11 @@
-Time Manager App:
-.\env\Scripts\activate
-Purpose: 
-    - Block applications and sites that are distracting when wanting to do work.
-    - Sessions for work w. blocking.
-    - Track time spent "consuming".
-    - Application, not web-app for tracking.
+How to display the what I want:
+    """
+    Per Program
+        1. total_time : Total time on Program DONE
+        2. Most used program in general *Can be accomplished by sorting via Total Time DONE
+        3. average_time : sums program until a program is changed, then at end does time[program]/changes[program] DONE
+        4. context_switch : changes[program], total number of program switches DONE
+    """
 
-
-How to:
-Block Applications:
-    - 
-
-Block Websites:
-    - 
-
-Get Data/Track Time: 1
-    - Pywin32 Libary 
-    - Get Focused Window DONE
-    - Run on an Interval DONE
-    - Store what was focused. // Ideas: csv file for easy exporting. Then can be interpreted elsewhere. DONE
-
-Focus Session:
-    - Check pyvda python, time-tracker-cli ?
-
-
-Interpretating Data:
-    - Current: Use program to get data about your usage, then can be interpreted with a web app? Streamlit?
-    - Datetime subtraction until focused changes, so we can total time spent on applications.
-
-
-
-Tools/Format:
-    - Windows: Open a new desktop for the work session, so when "unlocked", just open old desktop.
-
-
-UI:
-    - Streamlit?
+    Total time per program.. Can be done with a Area/Pie chart or even a bar/table 
+    
