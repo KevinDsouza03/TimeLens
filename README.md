@@ -1,47 +1,151 @@
 # TimeLens
 
-What is TimeLens:
-  TimeLens aims to be a productivity/activity tracker for your Windows PC. I aim to provide insights and meaningful metrics using the WindowsAPI, such as total time on programs, and how often you switch tasks. A more specific breakdown of the inspiration is provided below, but overall I started this app to try and find out my own computer habits. While there are other tools, I wanted to delve into the WindowsAPI for a long time and finally got to doing it.
+TimeLens is a standalone Windows application for tracking and analyzing your computer usage patterns with a focus on productivity and personal insights. All data is stored locally, ensuring complete privacy while providing meaningful metrics about your computer habits.
+
+![TimeLens Dashboard](image.png)
+
+## Features
+
+### Activity Tracking
+- **Window Focus Tracking**: Monitors active windows and applications in real-time
+- **Program Usage Statistics**: Tracks time spent on different applications
+- **Context Switch Analysis**: Measures how often you switch between different tasks
+- **Private & Secure**: All data stored locally on your machine
+
+### Data Visualization
+- Interactive dashboard built with React and Recharts
+- Visual insights including:
+  - Total time per program
+  - Context switch distribution
+  - Daily activity timeline
+  - Program usage patterns
+
+### Todo Management
+- Built-in todo list functionality
+- Add and manage tasks through CLI interface
+- Track task creation dates and times
+
+## Tech Stack
+
+- **Backend**: Python, FastAPI
+- **Frontend**: React, Vite, TailwindCSS
+- **Data Visualization**: Recharts
+- **Database**: SQLite
+- **Windows API Integration**: win32gui, psutil
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/kevindsouza03/timelens.git
+cd timelens
+```
+
+2. Set up Python virtual environment:
+```bash
+python -m venv env
+.\env\Scripts\activate  # Windows
+source env/bin/activate  # Unix/MacOS
+```
+
+3. Install Python dependencies:
+```bash
+pip install fastapi uvicorn pandas win32gui psutil inquirer
+```
+
+4. Install frontend dependencies:
+```bash
+cd TimeLens
+npm install
+```
+
+## Usage
+
+### Start the Backend Server
+
+1. Activate virtual environment:
+```bash
+.\env\Scripts\activate  # Windows
+source env/bin/activate  # Unix/MacOS
+```
+
+2. Run the API server:
+```bash
+python api.py
+```
+
+### Start the Frontend
+
+1. In a new terminal, navigate to the TimeLens directory:
+```bash
+cd TimeLens
+```
+
+2. Start the development server:
+```bash
+npm run dev
+```
+
+3. Open `http://localhost:5173` in your browser
+
+### Track Activity
+
+Run the main script to start tracking:
+```bash
+python main.py
+```
+
+Select from the following options:
+- **Track Usage**: Begin monitoring window focus
+- **Work Session**: Start a focused work session
+- **Add Todo**: Add items to your todo list
+- **Visualize**: Launch the visualization dashboard
+
+Press `Ctrl+C` to stop tracking. Data will be automatically processed and stored.
+
+## Database Structure
+
+TimeLens uses SQLite with the following tables:
+
+- `focus_logs`: Raw activity data
+- `program_insights`: Per-program analytics
+- `daily_insights`: Daily usage patterns
+- `general_insights`: Overall usage statistics
+
+## Development
+
+### Project Structure
+```
+timelens/
+├── api.py            # FastAPI backend server
+├── focus.py          # Core tracking functionality
+├── main.py           # CLI interface
+├── editTodo.py       # Todo management
+├── TimeLens/         # Frontend React application
+└── results/          # Data storage directory
+```
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## Privacy
+
+TimeLens is designed with privacy in mind:
+- All data is stored locally in SQLite database
+- No external services or APIs are used
+- Complete control over your usage data
+- Open source for transparency
 
 
-Problem: 
-- While there are many activity/time trackers and logs, the main concern is where this data is going.
-Solution:
-- A product that is open-source, so the user knows where everything is going (their own control).
-- Ease of use with simple gui.
-- Gives insightful data on what the user is actually doing on their computer.
+## Acknowledgments
 
-Inspiration: Most people nowadays are aware of dangers of social media and "doomscrolling", short-form content e.t.c. I found that while I didn't engage as much with the traditional apps like Instagram, Tik-tok and others, I would use Youtube a lot on my phone. Now cutting that down, I found out about Youtube tracking how much time you use it across your account. My usage shocked me, so that inspired me to make this application and learn more about myself and my computer habits.
-
-Market and Audience:
-- People interested in tracking their computer habits.
-
-Value Proposition:
-- What is the unique value proposition of my product?
-  - The application is focused on tracking personal data, but with no external snooping or any privacy concerns as it is run locally. The user will have the choice on how to export their data, whether they want it to be in simple text documents, or even onto specific spreadsheets that can provide user-specific insight.
- 
-
-Feasibility:
-- Key Features:
-  - Simple GUI that is easy to start.
-  - Very low utilization rate (doesnt cause any sort of lag)
-  - Data Tracking:
-    - Application Name
-    - Time Started
-    - Time Ended
-    - RAW DATA (Why do we want Raw data? This is unfiltered and the most basic so that if the user wants to do specific analysis, they can do so with the most barebones and interpret how they want to)
-
-  Tech Stack:
-  - Python (Initial data formatting and gathering)
-  - SQLite (db)
-  - React + ReCharts for Frontend Dashboard
-  - Java Spring (Backend)
-  - Electron ?
-
-
-Database Format: 3 Tables
-    - focus_logs (raw data)
-    - program_insights (per program insights)
-    - day_insights (per day insights)
-    - month_insights (per month insights)
-    - general_insights (general insights)
+Built with:
+- [React](https://reactjs.org/)
+- [Recharts](https://recharts.org/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [TailwindCSS](https://tailwindcss.com/)
