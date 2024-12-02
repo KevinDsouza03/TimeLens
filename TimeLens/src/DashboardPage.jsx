@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   BarChart, Bar, PieChart, Pie, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer , Cell
+  ResponsiveContainer, Cell
 } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
@@ -23,7 +23,9 @@ export default function DashboardPage() {
         const insights = await insightsRes.json();
         const timeline = await timelineRes.json();
         
-        setProgramInsights(insights);
+        // Filter out entries where program is 'None'
+        const filteredInsights = insights.filter(item => item.program !== 'None');
+        setProgramInsights(filteredInsights);
         setFocusTimeline(timeline);
       } catch (error) {
         console.error('Error fetching data:', error);
