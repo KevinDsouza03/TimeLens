@@ -4,10 +4,30 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer, Cell
 } from 'recharts';
-
+const { ipcRenderer } = window.require('electron');
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 export default function DashboardPage() {
+  // Add IPC listeners
+  useEffect(() => {
+    ipcRenderer.on('tracking-update', (event, data) => {
+      // Handle tracking updates
+      console.log('Tracking update:', data);
+    });
+
+    return () => {
+      ipcRenderer.removeAllListeners('tracking-update');
+    };
+  }, []);
+
+  const startTracking = () => {
+    ipcRenderer.send('start-tracking');
+  };
+
+  const stopTracking = () => {
+    ipcRenderer.send('stop-tracking');
+  };
+  
   const [programInsights, setProgramInsights] = useState([]);
   const [focusTimeline, setFocusTimeline] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
